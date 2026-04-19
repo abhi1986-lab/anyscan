@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
-import { jobStoreService } from '../services/job-store.service';
+import { storeService } from '../services/store.service';
 
 export class UploadsController {
-  create(req: Request, res: Response) {
+  async create(req: Request, res: Response) {
     if (!req.file) {
       return res.status(400).json({
         error: {
@@ -12,7 +12,7 @@ export class UploadsController {
       });
     }
 
-    const upload = jobStoreService.createUpload({
+    const upload = await storeService.createUpload({
       originalName: req.file.originalname,
       mimeType: req.file.mimetype,
       sizeBytes: req.file.size,
