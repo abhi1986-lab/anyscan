@@ -1,24 +1,16 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { Stack } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
-import 'react-native-reanimated';
-
-import { useColorScheme } from '@/hooks/use-color-scheme';
-
-export const unstable_settings = {
-  anchor: '(tabs)',
-};
+import { AppProvider } from '../src/store/AppContext';
 
 export default function RootLayout() {
-  const colorScheme = useColorScheme();
-
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="modal" options={{ presentation: 'modal', title: 'Modal' }} />
+    <AppProvider>
+      <Stack screenOptions={{ headerShown: true, headerBackTitle: '', headerShadowVisible: false }}>
+        <Stack.Screen name="index" options={{ title: 'Snap2Sheet' }} />
+        <Stack.Screen name="preview" options={{ title: 'Preview' }} />
+        <Stack.Screen name="processing" options={{ title: 'Processing', headerShown: false, animation: 'fade' }} />
+        <Stack.Screen name="review" options={{ title: 'Review Data' }} />
+        <Stack.Screen name="export" options={{ title: 'Success', headerShown: false, animation: 'slide_from_bottom' }} />
       </Stack>
-      <StatusBar style="auto" />
-    </ThemeProvider>
+    </AppProvider>
   );
 }
