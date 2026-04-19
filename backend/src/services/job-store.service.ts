@@ -1,10 +1,30 @@
 import { randomUUID } from 'crypto';
 import { JobRecord, JobResult, UploadRecord } from '../types/jobs';
-
-const uploads = new Map<string, UploadRecord>();
-const jobs = new Map<string, JobRecord>();
+import { persistenceService } from './persistence.service';
 
 export class JobStoreService {
+  private uploads = new Map<string, UploadRecord>();
+  private jobs = new Map<string, JobRecord>();
+
+  constructor() {
+    this.load();
+  }
+
+  private load() {
+    const state = persistenceService.readState();
+    this.uploads = new Map(state.uploads.map((upload) => [upload.uploadId, upload]));
+    this.jobs = new Map(state.jobs.map((job) => [job.jobId, job]));
+  }
+
+  private persist() {
+    const state = persistenceService.readState();
+    persistenceService.writeState({
+      ...state,
+      uploads: Array.from(this.uploads.values()),
+      jobs: Array.from(this.jobs.values()),
+    });
+  }
+
   createUpload(file: { originalName: string; mimeType: string; sizeBytes: number; path: string }): UploadRecord {
     const uploadId = `upl_${randomUUID()}`;
     const record: UploadRecord = {
@@ -15,12 +35,13 @@ export class JobStoreService {
       path: file.path,
       createdAt: new Date().toISOString(),
     };
-    uploads.set(uploadId, record);
+    this.uploads.set(uploadId, record);
+    this.persist();
     return record;
   }
 
   getUpload(uploadId: string): UploadRecord | undefined {
-    return uploads.get(uploadId);
+    return this.uploads.get(uploadId);
   }
 
   createJob(uploadId: string): JobRecord {
@@ -35,23 +56,29 @@ export class JobStoreService {
       createdAt: now,
       updatedAt: now,
     };
-    jobs.set(jobId, job);
+    this.jobs.set(jobId, job);
+    this.persist();
     return job;
   }
 
   getJob(jobId: string): JobRecord | undefined {
-    return jobs.get(jobId);
+    return this.jobs.get(jobId);
+  }
+
+  getJobsByStatus(statuses: JobRecord['status'][]): JobRecord[] {
+    return Array.from(this.jobs.values()).filter((job) => statuses.includes(job.status));
   }
 
   updateJob(jobId: string, patch: Partial<JobRecord>): JobRecord | undefined {
-    const current = jobs.get(jobId);
+    const current = this.jobs.get(jobId);
     if (!current) return undefined;
     const updated: JobRecord = {
       ...current,
       ...patch,
       updatedAt: new Date().toISOString(),
     };
-    jobs.set(jobId, updated);
+    this.jobs.set(jobId, updated);
+    this.persist();
     return updated;
   }
 

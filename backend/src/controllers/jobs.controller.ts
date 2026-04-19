@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { z } from 'zod';
-import { jobRunnerService } from '../services/job-runner.service';
+import { jobQueueService } from '../services/job-queue.service';
 import { jobStoreService } from '../services/job-store.service';
 
 const createJobSchema = z.object({
@@ -31,7 +31,7 @@ export class JobsController {
     }
 
     const job = jobStoreService.createJob(parsed.data.uploadId);
-    await jobRunnerService.enqueue(job.jobId);
+    jobQueueService.enqueue(job.jobId);
 
     return res.status(201).json({
       jobId: job.jobId,
@@ -111,7 +111,7 @@ export class JobsController {
       result: undefined,
     });
 
-    await jobRunnerService.enqueue(job.jobId);
+    jobQueueService.enqueue(job.jobId);
 
     return res.json({
       jobId: job.jobId,

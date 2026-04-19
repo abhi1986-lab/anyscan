@@ -8,6 +8,8 @@ export const config = {
   ocrProviderMode: process.env.OCR_PROVIDER_MODE || 'mock',
   aiProvider: process.env.AI_PROVIDER || 'openai',
   uploadDir: process.env.UPLOAD_DIR || 'uploads/',
+  dataDir: process.env.DATA_DIR || 'data/',
   maxFileSizeBytes: parseInt(process.env.MAX_FILE_SIZE_MB || '5', 10) * 1024 * 1024,
   jobPollIntervalMs: parseInt(process.env.JOB_POLL_INTERVAL_MS || '2000', 10),
+  queueConcurrency: parseInt(process.env.QUEUE_CONCURRENCY || '1', 10),
 };

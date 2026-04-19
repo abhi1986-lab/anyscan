@@ -4,15 +4,6 @@ import { jobStoreService } from './job-store.service';
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 export class JobRunnerService {
-  async enqueue(jobId: string): Promise<void> {
-    setTimeout(() => {
-      this.process(jobId).catch((error) => {
-        const message = error instanceof Error ? error.message : 'Unexpected job runner error';
-        jobStoreService.failJob(jobId, message);
-      });
-    }, 0);
-  }
-
   async process(jobId: string): Promise<void> {
     const job = jobStoreService.getJob(jobId);
     if (!job) {
@@ -28,6 +19,7 @@ export class JobRunnerService {
       status: 'preprocessing',
       progress: 10,
       stageMessage: 'Preparing document for processing',
+      errorMessage: undefined,
     });
 
     await sleep(300);
