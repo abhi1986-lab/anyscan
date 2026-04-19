@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { z } from 'zod';
 import { jobQueueService } from '../services/job-queue.service';
-import { jobStoreService } from '../services/job-store.service';
+import { storeService } from '../services/store.service';
 
 const createJobSchema = z.object({
   uploadId: z.string().min(1),
@@ -20,7 +20,7 @@ export class JobsController {
       });
     }
 
-    const upload = jobStoreService.getUpload(parsed.data.uploadId);
+    const upload = await storeService.getUpload(parsed.data.uploadId);
     if (!upload) {
       return res.status(404).json({
         error: {
@@ -30,8 +30,8 @@ export class JobsController {
       });
     }
 
-    const job = jobStoreService.createJob(parsed.data.uploadId);
-    jobQueueService.enqueue(job.jobId);
+    const job = await storeService.createJob(parsed.data.uploadId);
+    await jobQueueService.enqueue(job.jobId);
 
     return res.status(201).json({
       jobId: job.jobId,
@@ -39,8 +39,8 @@ export class JobsController {
     });
   }
 
-  getStatus(req: Request, res: Response) {
-    const job = jobStoreService.getJob(req.params.jobId);
+  async getStatus(req: Request, res: Response) {
+    const job = await storeService.getJob(req.params.jobId);
     if (!job) {
       return res.status(404).json({
         error: {
@@ -59,8 +59,8 @@ export class JobsController {
     });
   }
 
-  getResult(req: Request, res: Response) {
-    const job = jobStoreService.getJob(req.params.jobId);
+  async getResult(req: Request, res: Response) {
+    const job = await storeService.getJob(req.params.jobId);
     if (!job) {
       return res.status(404).json({
         error: {
@@ -83,7 +83,7 @@ export class JobsController {
   }
 
   async retry(req: Request, res: Response) {
-    const job = jobStoreService.getJob(req.params.jobId);
+    const job = await storeService.getJob(req.params.jobId);
     if (!job) {
       return res.status(404).json({
         error: {
@@ -93,7 +93,7 @@ export class JobsController {
       });
     }
 
-    const upload = jobStoreService.getUpload(job.uploadId);
+    const upload = await storeService.getUpload(job.uploadId);
     if (!upload) {
       return res.status(404).json({
         error: {
@@ -103,7 +103,7 @@ export class JobsController {
       });
     }
 
-    jobStoreService.updateJob(job.jobId, {
+    await storeService.updateJob(job.jobId, {
       status: 'queued',
       progress: 0,
       stageMessage: 'Queued for retry',
@@ -111,7 +111,7 @@ export class JobsController {
       result: undefined,
     });
 
-    jobQueueService.enqueue(job.jobId);
+    await jobQueueService.enqueue(job.jobId);
 
     return res.json({
       jobId: job.jobId,
