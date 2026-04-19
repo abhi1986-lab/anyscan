@@ -5,7 +5,7 @@ export const config = {
   port: parseInt(process.env.PORT || '3000', 10),
   corsOrigin: process.env.CORS_ORIGIN || '*',
   nodeEnv: process.env.NODE_ENV || 'development',
-  ocrProviderMode: process.env.OCR_PROVIDER_MODE || 'mock',
+  ocrProviderMode: process.env.OCR_PROVIDER_MODE || 'real',
   aiProvider: process.env.AI_PROVIDER || 'openai',
   uploadDir: process.env.UPLOAD_DIR || 'uploads/',
   dataDir: process.env.DATA_DIR || 'data/',
