@@ -1,0 +1,277 @@
+# Design Document
+
+## Product: ScanStruct (formerly Snap2Sheet)
+
+## Version: MVP (AI-powered, No Storage, One-Time Flow)
+
+---
+
+# 1. Design Objective
+
+Design a mobile interface that allows users to:
+
+> Convert any scanned image into structured, reusable key-value data using AI, exportable in multiple formats (JSON, CSV, TXT).
+
+Key principles:
+
+* Speed > features
+* Clarity > cleverness
+* Flexibility > rigid templates
+* User correction > AI perfection
+
+---
+
+# 2. Design Philosophy
+
+## 2.1 Core Principles
+
+* Minimal interface
+* Linear flow (no branching)
+* Large touch targets
+* Zero cognitive load
+* Immediate feedback
+* Dynamic data over fixed fields
+
+## 2.2 UX Model
+
+Capture → Preview → Process (OCR + AI) → Review (Dynamic Fields) → Export → Exit
+
+No loops. No side paths.
+
+---
+
+# 3. Target Device
+
+* Mobile-first
+* Android priority
+* Screen sizes: small to large phones
+* Portrait orientation only
+
+---
+
+# 4. Visual Design System
+
+## 4.1 Color Palette
+
+| Element        | Color   |
+| -------------- | ------- |
+| Background     | #FFFFFF |
+| Primary CTA    | #2563EB |
+| Text Primary   | #111827 |
+| Text Secondary | #6B7280 |
+| Border         | #E5E7EB |
+| Success        | #16A34A |
+| Error          | #DC2626 |
+
+## 4.2 Typography
+
+* Font: System default (San Francisco / Roboto)
+* Heading: Bold
+* Body: Regular
+* Button text: Semi-bold
+
+## 4.3 Spacing System
+
+* Base unit: 8px
+* Padding: 16px / 24px
+* Button height: 48–56px
+* Border radius: 10–12px
+
+---
+
+# 5. Screen Designs
+
+## 5.1 Home Screen
+
+### Purpose
+
+Entry point for user action
+
+### Layout
+
+* Title: ScanStruct
+* Subtitle: “Turn any document into structured data”
+* Buttons:
+
+  * Take Photo
+  * Upload Image
+
+---
+
+## 5.2 Preview Screen
+
+### Purpose
+
+Confirm selected image
+
+### Layout
+
+* Image preview
+* Buttons:
+
+  * Retake
+  * Extract Data
+
+---
+
+## 5.3 Processing Screen
+
+### Purpose
+
+Show system working state
+
+### Layout
+
+* Loader
+* Text:
+
+  * “Extracting text…”
+  * “Understanding document…”
+
+---
+
+## 5.4 Review Screen (Core)
+
+### Purpose
+
+Allow user to verify and edit AI-generated structured data
+
+### Layout
+
+Top:
+
+* Image thumbnail
+
+Below:
+
+* Document Type (auto-detected)
+
+Dynamic Fields Section:
+
+[ Key ] [ Value ]
+[ Name ] [ Abhishek Kumar Singh ]
+[ Department ] [ Income Tax Department ]
+
+Actions:
+
+* Add Field
+* Delete Field
+
+Optional:
+
+* Show Raw Text toggle
+
+Bottom:
+
+* Export Format Selector:
+
+  * JSON
+  * CSV
+  * TXT
+
+* Export Data button
+
+---
+
+## 5.5 Export Screen
+
+### Purpose
+
+Confirm export and allow sharing
+
+### Layout
+
+* Success icon
+* Text: “Data ready”
+
+Buttons:
+
+* Download
+* Share
+* Scan Another
+
+---
+
+# 6. Interaction Design
+
+## 6.1 Dynamic Field Behavior
+
+* Edit keys
+* Edit values
+* Add fields
+* Delete fields
+
+## 6.2 AI Transparency
+
+* Show: “AI extracted this data. Please review.”
+
+## 6.3 Loading Feedback
+
+* OCR stage
+* AI stage
+
+---
+
+# 7. Edge Cases
+
+## 7.1 AI Extraction Failure
+
+Show message and allow manual entry
+
+## 7.2 No Structured Fields
+
+Allow user to add fields manually
+
+## 7.3 Poor OCR
+
+Show raw text and allow reconstruction
+
+## 7.4 Unknown Document
+
+Set type as “Unknown”
+
+---
+
+# 8. Accessibility
+
+* Buttons ≥ 48px
+* Readable text
+* High contrast
+
+---
+
+# 9. Performance Guidelines
+
+* Target < 5 seconds
+* Progressive feedback
+
+---
+
+# 10. Do’s and Don’ts
+
+## Do
+
+* Keep UI flexible
+* Allow user control
+
+## Don’t
+
+* Hardcode fields
+* Overpromise AI
+
+---
+
+# 11. Definition of Design Done
+
+* Dynamic fields working
+* Editable AI output
+* Export works
+* UI supports any document type
+
+---
+
+# Final Note
+
+This is a universal document-to-structured-data interface powered by AI.
+
+Success = user can convert any document into usable structured data quickly.

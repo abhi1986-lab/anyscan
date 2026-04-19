@@ -1,0 +1,264 @@
+# **Business Requirements Document (BRD)**
+
+## Product: **Snap2Sheet (Working Name)**
+
+---
+
+## 1. **Objective**
+
+Build a mobile application that converts images of documents (receipts, invoices, printed text) into **structured, exportable data (CSV/Excel-ready)** with minimal user effort.
+
+Primary goal:
+
+> Enable users to go from image → usable data in under 10 seconds.
+
+Secondary goal:
+
+> Deliver a production-grade mobile app to learn end-to-end product execution and App Store deployment.
+
+---
+
+## 2. **Problem Statement**
+
+Users frequently deal with information locked inside images:
+
+* receipts for expense tracking
+* invoices for accounting
+* printed data for reporting
+
+Current solutions:
+
+* extract only raw text (not usable)
+* require manual re-entry into Excel
+* are cluttered or over-engineered
+
+Result:
+
+> Time wasted + friction in converting image data into structured format.
+
+---
+
+## 3. **Target Users**
+
+### Primary Users
+
+* freelancers tracking expenses
+* small business owners
+* accountants (light usage)
+* students handling data manually
+
+### Secondary Users
+
+* professionals needing quick data extraction
+* anyone converting printed data into digital format
+
+---
+
+## 4. **Scope**
+
+### **In Scope (v1)**
+
+* capture image via camera
+* upload image from gallery
+* extract text from image (OCR)
+* detect key fields (basic structure)
+* display extracted data for review/edit
+* export data as CSV
+* share/export file via device options
+* maintain local history of scans
+
+### **Out of Scope (v1)**
+
+* handwriting recognition
+* multi-language optimization
+* advanced AI document classification
+* cloud sync / user accounts
+* payment/subscription system
+* bulk processing
+* PDF/Word export
+
+---
+
+## 5. **Key Features**
+
+### 5.1 Image Input
+
+* capture via camera
+* select from gallery
+* preview before processing
+
+### 5.2 Data Extraction
+
+* OCR extraction of text
+* basic identification of:
+
+  * vendor name
+  * date
+  * total amount
+  * tax (if available)
+
+### 5.3 Data Review
+
+* display:
+
+  * raw extracted text
+  * structured fields
+* allow user edits before export
+
+### 5.4 Export
+
+* generate CSV file
+* allow:
+
+  * download/save
+  * share via apps (email, WhatsApp, Drive)
+
+### 5.5 History
+
+* list of previous scans
+* ability to reopen and re-export
+
+---
+
+## 6. **User Flow**
+
+1. User opens app
+2. Chooses:
+
+   * Take Photo OR Upload Image
+3. Image preview displayed
+4. User taps **Extract Data**
+5. App processes image
+6. Extracted data shown
+7. User edits if needed
+8. User taps **Export CSV**
+9. File generated and shared/saved
+
+---
+
+## 7. **Functional Requirements**
+
+### FR1: Image Capture
+
+* system shall allow image capture via device camera
+
+### FR2: Image Upload
+
+* system shall allow image selection from gallery
+
+### FR3: OCR Processing
+
+* system shall extract text from image input
+
+### FR4: Data Structuring
+
+* system shall map extracted text into basic structured fields
+
+### FR5: Data Editing
+
+* system shall allow users to modify extracted fields
+
+### FR6: CSV Export
+
+* system shall generate downloadable CSV file
+
+### FR7: File Sharing
+
+* system shall support native share options
+
+### FR8: Local Storage
+
+* system shall store extraction history locally
+
+---
+
+## 8. **Non-Functional Requirements**
+
+### Performance
+
+* extraction response time < 5 seconds (ideal)
+* app should not freeze during processing
+
+### Reliability
+
+* graceful failure if OCR fails
+* retry mechanism
+
+### Usability
+
+* minimal steps (≤ 5 actions to export)
+* clean, distraction-free UI
+
+### Compatibility
+
+* Android (priority)
+* iOS (secondary)
+
+### Security & Privacy
+
+* inform users if images are processed on server
+* avoid storing images permanently
+* comply with basic privacy requirements
+
+---
+
+## 9. **Success Metrics**
+
+### Product Metrics
+
+* successful extraction rate
+* average time to export
+* repeat usage (D1 / D7 retention)
+
+### Technical Metrics
+
+* crash-free sessions > 95%
+* OCR success rate
+* export success rate
+
+---
+
+## 10. **Risks & Constraints**
+
+### Risks
+
+* OCR inaccuracies
+* poor image quality
+* user expectation of 100% accuracy
+* competition from existing apps
+
+### Constraints
+
+* limited initial scope
+* no heavy backend optimization in v1
+* reliance on third-party OCR
+
+---
+
+## 11. **Future Enhancements**
+
+* Excel (.xlsx) export
+* PDF/Word export
+* multi-document templates
+* handwriting support
+* cloud sync
+* subscription model
+* AI-based advanced structuring
+* bulk scanning
+
+---
+
+## 12. **Release Plan**
+
+### Phase 1
+
+* MVP build (core flow complete)
+
+### Phase 2
+
+* polish + testing
+* edge case handling
+
+### Phase 3
+
+* App Store / Play Store release

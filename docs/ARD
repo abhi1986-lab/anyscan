@@ -1,0 +1,454 @@
+# **Architecture Requirements Document (ARD)**
+
+## Product: **ScanStruct (formerly Snap2Sheet)**
+
+## Version: **v1 Production-Ready Architecture**
+
+---
+
+# 1. **System Overview**
+
+## 1.1 Objective
+
+Build a scalable, production-grade system that:
+
+> Converts any scanned image into structured key-value data using OCR + AI.
+
+---
+
+## 1.2 High-Level Flow
+
+```text
+Mobile App (React Native)
+        ↓
+Backend API (Node.js)
+        ↓
+OCR Layer
+        ↓
+AI Structuring Layer
+        ↓
+Response Formatter
+        ↓
+Frontend (Review + Export)
+```
+
+---
+
+# 2. **Architecture Principles**
+
+* **Stateless backend (initially)**
+* **Loose coupling (OCR vs AI vs API)**
+* **Provider abstraction (swap vendors easily)**
+* **Fail-safe responses (never break frontend contract)**
+* **Horizontal scalability ready**
+* **Minimal latency (<5s target)**
+
+---
+
+# 3. **System Components**
+
+---
+
+## 3.1 Frontend (React Native – Expo)
+
+### Responsibilities
+
+* Capture/upload image
+* Display preview
+* Trigger extraction API
+* Render dynamic key-value fields
+* Allow user edits
+* Export structured data (CSV/JSON)
+* Handle errors and retries
+
+### Constraints
+
+* No heavy processing on device
+* No persistent storage (v1)
+* No business logic duplication
+
+---
+
+## 3.2 Backend API (Node.js + TypeScript)
+
+### Responsibilities
+
+* Accept image uploads
+* Validate input
+* Orchestrate OCR + AI pipeline
+* Normalize output
+* Return consistent response
+
+### Non-Responsibilities
+
+* No business analytics
+* No long-term storage
+* No authentication (v1)
+
+---
+
+## 3.3 OCR Layer
+
+### Purpose
+
+Convert image → raw text
+
+### Requirements
+
+* Provider-agnostic interface
+* Replaceable without affecting API layer
+
+### Interface
+
+```ts
+interface OCRProvider {
+  extractText(imagePath: string): Promise<string>;
+}
+```
+
+### Providers
+
+* MockOCRProvider (default dev)
+* RealOCRProvider (Google Vision / AWS Textract / Azure)
+
+---
+
+## 3.4 AI Structuring Layer
+
+### Purpose
+
+Convert raw text → structured key-value pairs
+
+### Requirements
+
+* LLM-based extraction
+* Deterministic output format
+* Strict JSON contract
+
+### Interface
+
+```ts
+interface AIExtractor {
+  extractStructuredData(rawText: string): Promise<StructuredDocument>;
+}
+```
+
+---
+
+## 3.5 Parsing / Normalization Layer
+
+### Purpose
+
+Ensure AI output conforms to frontend contract
+
+### Responsibilities
+
+* Validate structure
+* Fill missing fields
+* Normalize types
+* Prevent malformed responses
+
+---
+
+# 4. **Data Contract**
+
+## 4.1 Final API Response
+
+```json
+{
+  "rawText": "string",
+  "documentType": "string",
+  "title": "string",
+  "fields": [
+    { "key": "string", "value": "string" }
+  ]
+}
+```
+
+---
+
+## 4.2 Design Rules
+
+* `fields` MUST always be an array
+* No null values (use empty string)
+* No missing keys
+* Order should be meaningful (top-down importance)
+
+---
+
+# 5. **API Design**
+
+---
+
+## 5.1 POST /extract
+
+### Request
+
+* multipart/form-data
+* field: `image`
+
+### Response
+
+* structured JSON (above)
+
+---
+
+## 5.2 GET /health
+
+### Response
+
+```json
+{
+  "status": "ok",
+  "timestamp": "ISO string"
+}
+```
+
+---
+
+# 6. **Processing Pipeline**
+
+```text
+1. Receive image
+2. Validate file (type, size)
+3. Store temporarily
+4. OCR → rawText
+5. AI extraction → structured fields
+6. Normalize response
+7. Delete temp file
+8. Return JSON
+```
+
+---
+
+# 7. **AI Layer Design**
+
+---
+
+## 7.1 Prompt Template
+
+```text
+You are an information extraction engine.
+
+Given OCR text from a scanned document:
+- Identify document type
+- Extract meaningful key-value pairs
+
+Rules:
+- Return valid JSON only
+- Do not hallucinate values
+- Keep keys human-readable
+- If unsure, return empty string
+
+Output format:
+{
+  "documentType": "string",
+  "title": "string",
+  "fields": [
+    { "key": "string", "value": "string" }
+  ]
+}
+```
+
+---
+
+## 7.2 Constraints
+
+* Max tokens control
+* Timeout handling
+* Retry on transient failure
+* Fallback to regex parser if AI fails
+
+---
+
+# 8. **Error Handling Strategy**
+
+---
+
+## 8.1 Error Response Format
+
+```json
+{
+  "error": {
+    "code": "ERROR_CODE",
+    "message": "Human readable message"
+  }
+}
+```
+
+---
+
+## 8.2 Error Types
+
+| Type         | Example                |
+| ------------ | ---------------------- |
+| Validation   | No image uploaded      |
+| File Error   | Unsupported format     |
+| OCR Failure  | OCR provider failed    |
+| AI Failure   | Timeout / invalid JSON |
+| Server Error | Unexpected crash       |
+
+---
+
+# 9. **Security & Privacy**
+
+---
+
+## 9.1 Data Handling
+
+* No persistent storage of images
+* Temp files deleted immediately
+* No logging of sensitive content
+
+---
+
+## 9.2 API Security (v1 light)
+
+* CORS restriction
+* File size limits
+* MIME validation
+
+---
+
+## 9.3 Future
+
+* API key / auth
+* rate limiting
+* encryption
+
+---
+
+# 10. **Performance Requirements**
+
+* API response target: **< 5 seconds**
+* OCR + AI pipeline optimized
+* Image compression before upload (frontend)
+
+---
+
+# 11. **Scalability Considerations**
+
+---
+
+## v1
+
+* single instance Node server
+* synchronous processing
+
+---
+
+## v2 evolution path
+
+* async job queue (BullMQ / SQS)
+* worker services for OCR + AI
+* CDN/image pre-processing
+* caching frequent patterns
+
+---
+
+# 12. **Observability**
+
+---
+
+## Logging
+
+* request start/end
+* processing time
+* errors only (no verbose spam)
+
+---
+
+## Metrics (future)
+
+* success rate
+* latency
+* failure distribution
+
+---
+
+# 13. **Configuration**
+
+---
+
+## Environment Variables
+
+```env
+PORT=3000
+CORS_ORIGIN=http://localhost:8081
+OCR_PROVIDER_MODE=mock|real
+AI_PROVIDER=openai|other
+MAX_FILE_SIZE_MB=5
+```
+
+---
+
+# 14. **Deployment Architecture**
+
+---
+
+## v1 Deployment
+
+* Backend: Node server (Docker-ready)
+* Hosting: AWS / GCP / Railway / Render
+* Frontend: Expo build / App Store
+
+---
+
+## v2 Deployment
+
+* containerized services
+* autoscaling
+* separate AI worker layer
+
+---
+
+# 15. **Risks & Mitigation**
+
+---
+
+## Risk: OCR inaccuracies
+
+Mitigation:
+
+* allow manual editing in frontend
+
+---
+
+## Risk: AI hallucination
+
+Mitigation:
+
+* strict prompt + normalization layer
+
+---
+
+## Risk: slow response
+
+Mitigation:
+
+* lightweight pipeline
+* timeout + fallback
+
+---
+
+## Risk: unpredictable document formats
+
+Mitigation:
+
+* dynamic key-value model (already solved)
+
+---
+
+# 16. **Definition of Done (Production Ready)**
+
+System is considered production-ready when:
+
+* API stable and consistent
+* OCR + AI pipeline working reliably
+* frontend integration complete
+* error handling robust
+* no temp file leaks
+* response time acceptable
+* deployed and accessible
+
+---
