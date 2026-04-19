@@ -40,7 +40,7 @@ export class JobsController {
   }
 
   async getStatus(req: Request, res: Response) {
-    const job = await storeService.getJob(req.params.jobId);
+    const job = await storeService.getJob(req.params.jobId as string);
     if (!job) {
       return res.status(404).json({
         error: {
@@ -60,7 +60,7 @@ export class JobsController {
   }
 
   async getResult(req: Request, res: Response) {
-    const job = await storeService.getJob(req.params.jobId);
+    const job = await storeService.getJob(req.params.jobId as string);
     if (!job) {
       return res.status(404).json({
         error: {
@@ -83,7 +83,7 @@ export class JobsController {
   }
 
   async retry(req: Request, res: Response) {
-    const job = await storeService.getJob(req.params.jobId);
+    const job = await storeService.getJob(req.params.jobId as string);
     if (!job) {
       return res.status(404).json({
         error: {
