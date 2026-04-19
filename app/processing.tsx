@@ -1,11 +1,12 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, ActivityIndicator, SafeAreaView, Alert } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useAppContext } from '../src/store/AppContext';
 
 export default function ProcessingScreen() {
   const router = useRouter();
-  const { imageUri, setExtractedFields, setRawText } = useAppContext();
+  const { imageUri, setExtractedFields, setRawText, setDocumentType } = useAppContext();
+  const [stage, setStage] = useState('Extracting text...');
 
   useEffect(() => {
     const processImage = async () => {
@@ -15,13 +16,15 @@ export default function ProcessingScreen() {
       }
 
       try {
+        setStage('Extracting text...');
         // Fetch blob from local URI (works for web and RN)
         const response = await fetch(imageUri);
         const blob = await response.blob();
 
         const formData = new FormData();
-        formData.append('image', blob, 'receipt.jpg');
+        formData.append('image', blob, 'document.jpg');
 
+        setStage('Understanding document...');
         const apiRes = await fetch('http://localhost:3000/extract', {
           method: 'POST',
           body: formData,
@@ -33,8 +36,16 @@ export default function ProcessingScreen() {
 
         const data = await apiRes.json();
         
-        setRawText(data.rawText);
-        setExtractedFields(data.fields);
+        setRawText(data.rawText || null);
+        setDocumentType(data.documentType || 'Unknown Document');
+        
+        // Transform fields to structured fields if needed, or directly assign
+        if (Array.isArray(data.fields)) {
+          setExtractedFields(data.fields);
+        } else {
+          setExtractedFields([]);
+        }
+
         router.replace('/review');
       } catch (error) {
         console.error('Extraction error:', error);
@@ -50,7 +61,7 @@ export default function ProcessingScreen() {
     <SafeAreaView style={styles.container}>
       <View style={styles.content}>
         <ActivityIndicator size="large" color="#007AFF" />
-        <Text style={styles.text}>Extracting data...</Text>
+        <Text style={styles.text}>{stage}</Text>
         <Text style={styles.subtext}>Our Backend API is processing your document.</Text>
       </View>
     </SafeAreaView>

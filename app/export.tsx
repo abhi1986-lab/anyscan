@@ -1,15 +1,17 @@
 import React from 'react';
 import { View, Text, StyleSheet, SafeAreaView, Alert } from 'react-native';
-import { useRouter } from 'expo-router';
+import { useRouter, useLocalSearchParams } from 'expo-router';
 import { Button } from '../src/components/Button';
 import { useAppContext } from '../src/store/AppContext';
 
 export default function ExportScreen() {
   const router = useRouter();
-  const { setImageUri, setExtractedFields, setRawText } = useAppContext();
+  const params = useLocalSearchParams();
+  const exportFormat = params.format || 'JSON';
+  const { setImageUri, setExtractedFields, setRawText, setDocumentType } = useAppContext();
 
   const handleDownload = () => {
-    Alert.alert('Download Started', 'Your CSV file is being saved.');
+    Alert.alert('Download Started', `Your ${exportFormat} file is being saved.`);
   };
 
   const handleShare = () => {
@@ -18,8 +20,9 @@ export default function ExportScreen() {
 
   const handleScanAnother = () => {
     setImageUri(null);
-    setExtractedFields(null);
+    setExtractedFields([]);
     setRawText(null);
+    setDocumentType('Unknown');
     router.dismissAll();
     router.replace('/');
   };
@@ -34,7 +37,7 @@ export default function ExportScreen() {
         <Text style={styles.subtitle}>Your data is ready to be exported.</Text>
         
         <View style={styles.buttonContainer}>
-          <Button title="Download CSV" onPress={handleDownload} variant="primary" />
+          <Button title={`Download ${exportFormat}`} onPress={handleDownload} variant="primary" />
           <Button title="Share" onPress={handleShare} variant="outline" />
         </View>
         

@@ -1,24 +1,11 @@
-export interface RawExtractionResult {
-  text: string;
+export interface StructuredField {
+  key: string;
+  value: string;
 }
 
-export interface ExtractedLineItem {
-  name: string;
-  quantity: string;
-  price: string;
-  amount: string;
-}
-
-export interface ExtractedFields {
-  vendor: string;
-  date: string;
-  totalAmount: string;
-  tax: string;
-}
-
-export interface StructuredExtraction {
+export interface StructuredDocument {
   rawText: string;
   documentType: string;
-  fields: ExtractedFields;
-  lineItems: ExtractedLineItem[];
+  title: string;
+  fields: StructuredField[];
 }
