@@ -1,0 +1,44 @@
+{
+  "uploads": [
+    {
+      "uploadId": "upl_f71efedc-f63e-4a75-8f52-4c94a63cd2dd",
+      "originalName": "document.jpg",
+      "mimeType": "image/jpeg",
+      "sizeBytes": 498006,
+      "path": "uploads/file-1776579882574-591733847-document.jpg",
+      "createdAt": "2026-04-19T06:24:42.581Z"
+    }
+  ],
+  "jobs": [
+    {
+      "jobId": "job_7a590dc9-1f4d-4f60-944c-dbefef3618a4",
+      "uploadId": "upl_f71efedc-f63e-4a75-8f52-4c94a63cd2dd",
+      "status": "completed",
+      "progress": 100,
+      "stageMessage": "Processing complete",
+      "createdAt": "2026-04-19T06:24:42.598Z",
+      "updatedAt": "2026-04-19T06:24:50.492Z",
+      "result": {
+        "jobId": "job_7a590dc9-1f4d-4f60-944c-dbefef3618a4",
+        "rawText": "1 CE : 1 : gk\n1 LE . 4 Re\n1 X Pod bd ® s ig\n3 Ja 3 hx i ap tre\n| . 2 XB Sil tg Ps\nEF Fr . # - Fin L- J oar Se\n§1 Vs) F'3 (Yq 1 wl ale aa ; i fe EERE Te CC\n3 =» 3 i \\ 5 Ty : Ee Li Rl IEA RAE \\LhuEr\n1 vy Ler : 11 ETE Aaa TRAE\ni A he 7 Salad ; 19 EFI frre PN eat Ch\n1 : wk =a 1987 1 pl ATTEN 73\n{ - dE 2 Fo EN I i 1 CH\n1 - ’ § Ego, ES\ni Faas Ae i\nFE - Zhe rE REIN a = re\n1 X - IRR CEE NERE  a\n-3 : J 5 her ATR RF\n1 } 4 - 1 Ws ily Seth da = of Te. It\n1 FEET STU RE da EN le 2 1900\nr Pe re - 3 Re MR era PR oo\nTT TTI Ett EL 5\n1 ee is §.. TET ae a Pa Xa\n? i it JE } ves i Sra il :\nER g i | i [HH - un AR ota\n. aie JERE eon\na i ’ ii - Vast ag E\n% o{ HT 3 1 E ) 1\n3 Ul il ik 2 a ] F ; 1\n| : 2\ni) Ey\n£ Ls 3 Be\n| — Sar ee it oS po. = ot a o—_c , 3 i 0 a Ea a a A\n1 = = AA tL TL TL TIE |\n2 i ». i x Ty ug > | = .\nNo ) 4\n1 A . 8 kl s_.» “ ;\ngE : ; b\nrE :\ncal S Cea 1 A y Fo\n1 . \" Ele IE hclSSEESLL. | I, a\n4 PERE. red at = = 0 She L\n; Ta ; J ye ou TE. esa sit\n: 4 . BE GE alse TR uC AE plo oie oy\n1 CX ’ a E EE a TET a iE es We\n» CC - LT CO. Ya $a fe\n{ aimed A 5 Ne oN a =. wn - A 21s ¥ ie . £0 LE ey\nE 4 H . TH - APT TE . rT T A i > p e-\n| SWCratire i: i me he & ™ | hl\n3 Sn ars a 39 or Ad re \"er = R -_ a : Liter J pp BE I\na8 a pe Rae WE id £4 jars El EONS oy rr VR erp ee\ni EF Pi Bt ; ea Ve WE qa I ST ai cae\n| F at Fe - BEAR 4 ~ :\n15 a 3 4 a wR) pv | ka ]\nBERR En tt lal Tac\nEE EE cal\nCT EE EE Mr CR RL\nSTi ; BEER i\noy TE Re NR\ngee re te fo 1) “eed er Es\nLo a ER\ni i i he ol Fed yo) ;\n%) Ean FCs {oh Ca\nAart LRA Bar.\n: Ea Le es EE\ngio) Besta db # i : dak 4, Pex Sls i CEES i <3) hig 7\n",
+        "documentType": "Document (Simulated AI)",
+        "title": "Extracted Document",
+        "fields": [
+          {
+            "key": "Summary",
+            "value": "This is a mock AI summary of the text."
+          },
+          {
+            "key": "Key Entity",
+            "value": "Found Entity"
+          }
+        ],
+        "confidence": 0.88,
+        "warnings": []
+      }
+    }
+  ],
+  "queue": {
+    "pendingJobIds": []
+  }
+}
